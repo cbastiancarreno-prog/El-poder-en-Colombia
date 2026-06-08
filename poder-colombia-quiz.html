@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cómo entiendes el poder en Colombia?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1410;
+    --paper: #f5f0e8;
+    --gold: #c8922a;
+    --gold-light: #e8c97a;
+    --rust: #8b3a2a;
+    --muted: #6b6055;
+    --border: #d4c8b0;
+    --white: #fdfaf5;
+    --a-color: #2a5c8b;
+    --b-color: #3a7a4a;
+    --c-color: #8b3a2a;
+    --d-color: #6a3a8b;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--ink);
+    color: var(--white);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(200,146,42,0.05) 40px,
+      rgba(200,146,42,0.05) 41px
+    );
+  }
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    max-width: 700px;
+    margin: 0 auto 1.2rem;
+  }
+  .hero h1 em { color: var(--gold); font-style: italic; }
+  .hero-sub {
+    font-size: 1rem;
+    color: rgba(253,250,245,0.65);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .hero-meta {
+    margin-top: 1.8rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    font-size: 0.8rem;
+    color: rgba(253,250,245,0.45);
+    letter-spacing: 0.05em;
+  }
+
+  /* PROGRESS */
+  .progress-bar-wrap {
+    background: var(--ink);
+    padding: 0 2rem 1.2rem;
+  }
+  .progress-track {
+    max-width: 680px;
+    margin: 0 auto;
+    background: rgba(255,255,255,0.1);
+    height: 3px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  /* MAIN */
+  .main {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    display: none;
+    animation: fadeUp 0.35s ease both;
+  }
+  .q-card.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .q-num {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+  .q-bonus-tag {
+    display: inline-block;
+    background: var(--rust);
+    color: #fff;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .q-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.15rem, 3vw, 1.45rem);
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 2rem;
+    color: var(--ink);
+  }
+
+  /* OPTIONS */
+  .options { display: flex; flex-direction: column; gap: 0.75rem; }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    background: var(--white);
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-align: left;
+  }
+  .option:hover {
+    border-color: var(--gold);
+    background: #fdf8ed;
+    transform: translateX(3px);
+  }
+  .option.selected {
+    border-color: var(--gold);
+    background: #fdf8ed;
+  }
+  .opt-letter {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+    transition: all 0.18s ease;
+    margin-top: 1px;
+  }
+  .option.selected .opt-letter,
+  .option:hover .opt-letter {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #fff;
+  }
+  .opt-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  /* NAV */
+  .q-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+    gap: 1rem;
+  }
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 0.7rem 1.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: #2e2520; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--muted); color: var(--ink); }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* RESULTS */
+  #results { display: none; }
+  #results.active { display: block; animation: fadeUp 0.4s ease both; }
+
+  .results-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .results-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+  .results-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+  .results-subtitle {
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  /* PROFILE CARD */
+  .profile-card {
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    padding: 1.8rem;
+    background: var(--white);
+    margin-bottom: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle at top right, rgba(200,146,42,0.12), transparent 70%);
+  }
+  .profile-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+  }
+  .profile-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .profile-desc {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* VOTE BAR */
+  .vote-section { margin-bottom: 2rem; }
+  .vote-title {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+  .vote-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+  }
+  .vote-label {
+    width: 22px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .vote-track {
+    flex: 1;
+    background: var(--border);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .vote-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    width: 0;
+  }
+  .vote-count {
+    font-size: 0.8rem;
+    font-weight: 500;
+    width: 16px;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+  .bar-a { background: var(--a-color); }
+  .bar-b { background: var(--b-color); }
+  .bar-c { background: var(--rust); }
+  .bar-d { background: var(--d-color); }
+
+  /* ANSWER REVIEW */
+  .review-section { margin-bottom: 2rem; }
+  .review-title {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 1.2rem;
+  }
+  .review-item {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.7rem;
+    background: var(--white);
+  }
+  .review-q {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+  .review-a {
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .review-a span {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    padding: 1px 7px;
+    border-radius: 3px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  .share-box {
+    background: var(--ink);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .share-box p {
+    font-size: 0.9rem;
+    color: rgba(253,250,245,0.6);
+    margin-bottom: 1rem;
+  }
+  .share-url {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: var(--gold-light);
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    word-break: break-all;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .btn-copy {
+    background: var(--gold);
+    color: var(--ink);
+    font-weight: 500;
+    padding: 0.6rem 1.4rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.18s ease;
+  }
+  .btn-copy:hover { background: var(--gold-light); }
+
+  .restart-btn {
+    display: block;
+    width: 100%;
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-decoration: none;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+  .restart-btn:hover { color: var(--ink); text-decoration: underline; }
+
+  @media (max-width: 480px) {
+    .hero { padding: 3rem 1.2rem 2rem; }
+    .main { padding: 2rem 1rem 3rem; }
+    .hero-meta { gap: 1rem; flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-eyebrow">Cuestionario de análisis político</div>
+  <h1>¿Cómo entiendes el <em>poder</em> en Colombia?</h1>
+  <p class="hero-sub">6 preguntas para explorar tu visión sobre el Estado, las instituciones y las estructuras de poder en el país.</p>
+  <div class="hero-meta">
+    <span>6 preguntas</span>
+    <span>~3 minutos</span>
+    <span>Resultados inmediatos</span>
+  </div>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+</div>
+
+<div class="main">
+  <div id="quiz">
+
+    <!-- Q1 -->
+    <div class="q-card active" data-q="0">
+      <div class="q-num">Pregunta 1 de 6</div>
+      <div class="q-text">¿Qué describe mejor la realidad del poder en Colombia?</div>
+      <div class="options">
+        <label class="option"><span class="opt-letter">A</span><span class="opt-text">El Estado es el único poder verdaderamente relevante.</span><input type="radio" name="q0" value="A" hidden></label>
+        <label class="option"><span class="opt-letter">B</span><span class="opt-text">El poder está distribuido entre el Estado, empresarios y actores regionales.</span><input type="radio" name="q0" value="B" hidden></label>
+        <label class="option"><span class="opt-letter">C</span><span class="opt-text">El poder real está principalmente en las economías ilegales.</span><input type="radio" name="q0" value="C" hidden></label>
+        <label class="option"><span class="opt-letter">D</span><span class="opt-text">El poder cambia según la región y el momento histórico.</span><input type="radio" name="q0" value="D" hidden></label>
+      </div>
+      <div class="q-nav">
+        <span></span>
+        <button class="btn btn-primary" onclick="next(0)" id="btn0" disabled>Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="q-card" data-q="1">
+      <div class="q-num">Pregunta 2 de 6</div>
+      <div class="q-text">Cuando una actividad ilegal controla la economía de una región durante décadas, lo más probable es que:</div>
+      <div class="options">
+        <label class="option"><span class="opt-letter">A</span><span class="opt-text">Sea únicamente un problema de seguridad.</span><input type="radio" name="q1" value="A" hidden></label>
+        <label class="option"><span class="opt-letter">B</span><span class="opt-text">Se convierta en una estructura de poder local.</span><input type="radio" name="q1" value="B" hidden></label>
+        <label class="option"><span class="opt-letter">C</span><span class="opt-text">Sea consecuencia exclusiva de la pobreza.</span><input type="radio" name="q1" value="C" hidden></label>
+        <label class="option"><span class="opt-letter">D</span><span class="opt-text">Desaparezca con más presencia militar.</span><input type="radio" name="q1" value="D" hidden></label>
+      </div>
+      <div class="q-nav">
+        <button class="btn btn-ghost" onclick="prev(1)">← Anterior</button>
+        <button class="btn btn-primary" onclick="next(1)" id="btn1" disabled>Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="q-card" data-q="2">
+      <div class="q-num">Pregunta 3 de 6</div>
+      <div class="q-text">Un gobierno que busca combatir estructuras ilegales arraigadas debería:</div>
+      <div class="options">
+        <label class="option"><span class="opt-letter">A</span><span class="opt-text">Actuar de forma rápida y contundente, aun con riesgos de inestabilidad.</span><input type="radio" name="q2" value="A" hidden></label>
+        <label class="option"><span class="opt-letter">B</span><span class="opt-text">Actuar gradualmente para preservar la gobernabilidad.</span><input type="radio" name="q2" value="B" hidden></label>
+        <label class="option"><span class="opt-letter">C</span><span class="opt-text">Priorizar acuerdos económicos antes que acciones de fuerza.</span><input type="radio" name="q2" value="C" hidden></label>
+        <label class="option"><span class="opt-letter">D</span><span class="opt-text">Combinar presión estatal, alternativas económicas y fortalecimiento institucional.</span><input type="radio" name="q2" value="D" hidden></label>
+      </div>
+      <div class="q-nav">
+        <button class="btn btn-ghost" onclick="prev(2)">← Anterior</button>
+        <button class="btn btn-primary" onclick="next(2)" id="btn2" disabled>Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="q-card" data-q="3">
+      <div class="q-num">Pregunta 4 de 6</div>
+      <div class="q-text">¿Cuál de estas afirmaciones es más cercana a la realidad sobre la corrupción?</div>
+      <div class="options">
+        <label class="option"><span class="opt-letter">A</span><span class="opt-text">La corrupción depende principalmente de los gobernantes.</span><input type="radio" name="q3" value="A" hidden></label>
+        <label class="option"><span class="opt-letter">B</span><span class="opt-text">La corrupción depende principalmente de la cultura política.</span><input type="radio" name="q3" value="B" hidden></label>
+        <label class="option"><span class="opt-letter">C</span><span class="opt-text">La corrupción depende principalmente de las instituciones.</span><input type="radio" name="q3" value="C" hidden></label>
+        <label class="option"><span class="opt-letter">D</span><span class="opt-text">La corrupción surge de la interacción entre gobernantes, instituciones y sociedad.</span><input type="radio" name="q3" value="D" hidden></label>
+      </div>
+      <div class="q-nav">
+        <button class="btn btn-ghost" onclick="prev(3)">← Anterior</button>
+        <button class="btn btn-primary" onclick="next(3)" id="btn3" disabled>Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="q-card" data-q="4">
+      <div class="q-num">Pregunta 5 de 6</div>
+      <div class="q-text">¿Cuál es el mayor desafío para gobernar Colombia?</div>
+      <div class="options">
+        <label class="option"><span class="opt-letter">A</span><span class="opt-text">La inseguridad.</span><input type="radio" name="q4" value="A" hidden></label>
+        <label class="option"><span class="opt-letter">B</span><span class="opt-text">La corrupción.</span><input type="radio" name="q4" value="B" hidden></label>
+        <label class="option"><span class="opt-letter">C</span><span class="opt-text">La desigualdad social.</span><input type="radio" name="q4" value="C" hidden></label>
+        <label class="option"><span class="opt-letter">D</span><span class="opt-text">La coexistencia de múltiples centros de poder con capacidad de influir sobre el Estado.</span><input type="radio" name="q4" value="D" hidden></label>
+      </div>
+      <div class="q-nav">
+        <button class="btn btn-ghost" onclick="prev(4)">← Anterior</button>
+        <button class="btn btn-primary" onclick="next(4)" id="btn4" disabled>Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- Q6 BONUS -->
+    <div class="q-card" data-q="5">
+      <div class="q-num">Pregunta 6 de 6 <span class="q-bonus-tag">Bonus</span></div>
+      <div class="q-text">¿Qué frase considera más acertada?</div>
+      <div class="options">
+        <label class="option"><span class="opt-letter">A</span><span class="opt-text">"Un país debe gobernarse como una empresa."</span><input type="radio" name="q5" value="A" hidden></label>
+        <label class="option"><span class="opt-letter">B</span><span class="opt-text">"Un país debe gestionarse eficientemente, pero no como una empresa."</span><input type="radio" name="q5" value="B" hidden></label>
+        <label class="option"><span class="opt-letter">C</span><span class="opt-text">"La democracia es más importante que la eficiencia."</span><input type="radio" name="q5" value="C" hidden></label>
+        <label class="option"><span class="opt-letter">D</span><span class="opt-text">"La eficiencia y la democracia son igualmente necesarias."</span><input type="radio" name="q5" value="D" hidden></label>
+      </div>
+      <div class="q-nav">
+        <button class="btn btn-ghost" onclick="prev(5)">← Anterior</button>
+        <button class="btn btn-primary" onclick="showResults()" id="btn5" disabled>Ver mis resultados →</button>
+      </div>
+    </div>
+
+  </div><!-- /quiz -->
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <div class="results-header">
+      <div class="results-eyebrow">Tus resultados</div>
+      <div class="results-title" id="rTitle"></div>
+      <div class="results-subtitle" id="rSub"></div>
+    </div>
+
+    <div class="profile-card" id="profileCard">
+      <div class="profile-letter" id="profileLetter"></div>
+      <div class="profile-name" id="profileName"></div>
+      <div class="profile-desc" id="profileDesc"></div>
+    </div>
+
+    <div class="vote-section">
+      <div class="vote-title">Distribución de tus respuestas</div>
+      <div class="vote-row">
+        <span class="vote-label">A</span>
+        <div class="vote-track"><div class="vote-bar bar-a" id="barA"></div></div>
+        <span class="vote-count" id="cntA">0</span>
+      </div>
+      <div class="vote-row">
+        <span class="vote-label">B</span>
+        <div class="vote-track"><div class="vote-bar bar-b" id="barB"></div></div>
+        <span class="vote-count" id="cntB">0</span>
+      </div>
+      <div class="vote-row">
+        <span class="vote-label">C</span>
+        <div class="vote-track"><div class="vote-bar bar-c" id="barC"></div></div>
+        <span class="vote-count" id="cntC">0</span>
+      </div>
+      <div class="vote-row">
+        <span class="vote-label">D</span>
+        <div class="vote-track"><div class="vote-bar bar-d" id="barD"></div></div>
+        <span class="vote-count" id="cntD">0</span>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="review-section">
+      <div class="review-title">Tus respuestas</div>
+      <div id="reviewList"></div>
+    </div>
+
+    <div class="share-box">
+      <p>Comparte este cuestionario con tu red</p>
+      <span class="share-url" id="shareUrl"></span>
+      <button class="btn-copy" onclick="copyLink()">Copiar enlace</button>
+    </div>
+
+    <button class="restart-btn" onclick="restart()">↺ Volver a responder</button>
+
+  </div><!-- /results -->
+</div><!-- /main -->
+
+<script>
+const questions = [
+  "¿Qué describe mejor la realidad del poder en Colombia?",
+  "Cuando una actividad ilegal controla la economía de una región durante décadas, lo más probable es que:",
+  "Un gobierno que busca combatir estructuras ilegales arraigadas debería:",
+  "¿Cuál es más cercana a la realidad sobre la corrupción?",
+  "¿Cuál es el mayor desafío para gobernar Colombia?",
+  "¿Qué frase considera más acertada? (Bonus)"
+];
+
+const optTexts = [
+  ["El Estado es el único poder verdaderamente relevante.", "El poder está distribuido entre el Estado, empresarios y actores regionales.", "El poder real está principalmente en las economías ilegales.", "El poder cambia según la región y el momento histórico."],
+  ["Sea únicamente un problema de seguridad.", "Se convierta en una estructura de poder local.", "Sea consecuencia exclusiva de la pobreza.", "Desaparezca con más presencia militar."],
+  ["Actuar de forma rápida y contundente, aun con riesgos de inestabilidad.", "Actuar gradualmente para preservar la gobernabilidad.", "Priorizar acuerdos económicos antes que acciones de fuerza.", "Combinar presión estatal, alternativas económicas y fortalecimiento institucional."],
+  ["La corrupción depende principalmente de los gobernantes.", "La corrupción depende principalmente de la cultura política.", "La corrupción depende principalmente de las instituciones.", "La corrupción surge de la interacción entre gobernantes, instituciones y sociedad."],
+  ["La inseguridad.", "La corrupción.", "La desigualdad social.", "La coexistencia de múltiples centros de poder con capacidad de influir sobre el Estado."],
+  ['"Un país debe gobernarse como una empresa."', '"Un país debe gestionarse eficientemente, pero no como una empresa."', '"La democracia es más importante que la eficiencia."', '"La eficiencia y la democracia son igualmente necesarias."']
+];
+
+const profiles = {
+  A: {
+    name: "Visión institucionalista",
+    letter: "A",
+    bg: "#e8f0f8", color: "#2a5c8b",
+    desc: "Tiendes a confiar en el Estado y en las instituciones formales como los principales vehículos del poder y el orden social. Valoras la estabilidad institucional y crees que el fortalecimiento del aparato estatal es la clave para resolver los grandes problemas del país. Esta visión tiene raíces en la teoría política clásica y es común entre quienes priorizan el orden y la legalidad."
+  },
+  B: {
+    name: "Visión pragmática y gradualista",
+    letter: "B",
+    bg: "#e8f5ec", color: "#3a7a4a",
+    desc: "Tu enfoque es realista y moderado. Reconoces la complejidad del poder sin radicalizarte en una sola explicación. Prefieres transformaciones graduales que preserven la gobernabilidad y consideras que los cambios sostenibles requieren negociación y acuerdos entre múltiples actores. Esta postura es frecuente en quienes tienen experiencia práctica en gestión o política."
+  },
+  C: {
+    name: "Visión crítica estructural",
+    letter: "C",
+    bg: "#f8ede8", color: "#8b3a2a",
+    desc: "Tienes una mirada crítica que cuestiona las causas profundas de los problemas colombianos: la desigualdad, las estructuras económicas y la exclusión social. Tiendes a ver las manifestaciones del poder —incluyendo la corrupción y la ilegalidad— como síntomas de fallas estructurales más hondas que requieren transformaciones de fondo, no solo reformas superficiales."
+  },
+  D: {
+    name: "Visión sistémica y compleja",
+    letter: "D",
+    bg: "#f0e8f8", color: "#6a3a8b",
+    desc: "Comprendes el poder como una red de múltiples actores, tensiones y dinámicas que interactúan de forma no lineal. Tu visión es sofisticada: reconoces que el Estado, las economías ilegales, las élites regionales, la cultura y las instituciones son engranajes de un sistema complejo. Esta perspectiva está alineada con la ciencia política contemporánea y el análisis de sistemas."
+  }
+};
+
+let answers = new Array(6).fill(null);
+
+// Wire up options
+document.querySelectorAll('.option').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const input = opt.querySelector('input[type=radio]');
+    const name = input.name;
+    const qIdx = parseInt(name.replace('q',''));
+    // deselect siblings
+    document.querySelectorAll(`input[name="${name}"]`).forEach(r => {
+      r.closest('.option').classList.remove('selected');
+    });
+    opt.classList.add('selected');
+    input.checked = true;
+    answers[qIdx] = input.value;
+    document.getElementById('btn' + qIdx).disabled = false;
+    updateProgress();
+  });
+});
+
+function updateProgress() {
+  const answered = answers.filter(a => a !== null).length;
+  document.getElementById('progressFill').style.width = (answered / 6 * 100) + '%';
+}
+
+function goTo(idx) {
+  document.querySelectorAll('.q-card').forEach(c => c.classList.remove('active'));
+  const card = document.querySelector(`.q-card[data-q="${idx}"]`);
+  if (card) { card.classList.add('active'); card.scrollIntoView({behavior:'smooth', block:'nearest'}); }
+}
+
+function next(idx) { goTo(idx + 1); }
+function prev(idx) { goTo(idx - 1); }
+
+function showResults() {
+  document.getElementById('quiz').style.display = 'none';
+  document.getElementById('progressFill').style.width = '100%';
+
+  const counts = { A:0, B:0, C:0, D:0 };
+  answers.forEach(a => { if(a) counts[a]++; });
+
+  const winner = Object.entries(counts).sort((a,b) => b[1]-a[1])[0][0];
+  const p = profiles[winner];
+
+  document.getElementById('rTitle').textContent = p.name;
+  document.getElementById('rSub').textContent = 'Tu perfil predominante según tus respuestas';
+
+  const pl = document.getElementById('profileLetter');
+  pl.textContent = p.letter;
+  pl.style.background = p.bg;
+  pl.style.color = p.color;
+
+  document.getElementById('profileName').textContent = p.name;
+  document.getElementById('profileDesc').textContent = p.desc;
+
+  const total = 6;
+  ['A','B','C','D'].forEach(l => {
+    const pct = Math.round(counts[l] / total * 100);
+    document.getElementById('bar'+l).style.width = pct + '%';
+    document.getElementById('cnt'+l).textContent = counts[l];
+  });
+
+  const letters = ['A','B','C','D'];
+  const reviewEl = document.getElementById('reviewList');
+  reviewEl.innerHTML = answers.map((a, i) => {
+    const optIdx = letters.indexOf(a);
+    const optLabel = optTexts[i][optIdx] || '';
+    const color = {A:'#2a5c8b',B:'#3a7a4a',C:'#8b3a2a',D:'#6a3a8b'}[a];
+    return `<div class="review-item">
+      <div class="review-q">Pregunta ${i+1}</div>
+      <div class="review-a"><span style="background:${color}20;color:${color};font-weight:500;">${a}</span>${optLabel}</div>
+    </div>`;
+  }).join('');
+
+  const url = window.location.href.split('?')[0];
+  document.getElementById('shareUrl').textContent = url;
+
+  const res = document.getElementById('results');
+  res.style.display = 'block';
+  res.classList.add('active');
+  res.scrollIntoView({behavior:'smooth', block:'start'});
+
+  setTimeout(() => {
+    ['A','B','C','D'].forEach(l => {
+      const pct = Math.round(counts[l] / total * 100);
+      document.getElementById('bar'+l).style.width = pct + '%';
+    });
+  }, 100);
+}
+
+function copyLink() {
+  const url = window.location.href.split('?')[0];
+  navigator.clipboard.writeText(url).then(() => {
+    const btn = document.querySelector('.btn-copy');
+    btn.textContent = '¡Copiado!';
+    setTimeout(() => btn.textContent = 'Copiar enlace', 2000);
+  });
+}
+
+function restart() {
+  answers = new Array(6).fill(null);
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+  document.querySelectorAll('.btn-primary[id^=btn]').forEach(b => b.disabled = true);
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('results').classList.remove('active');
+  document.getElementById('quiz').style.display = 'block';
+  document.getElementById('progressFill').style.width = '0%';
+  goTo(0);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+</script>
+</body>
+</html>
